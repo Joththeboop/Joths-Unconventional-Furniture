@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top",
+  "textures": {
+    "top": "jufurniture:block/testdoor_top",
+    "bottom": "jufurniture:block/testdoor_bottom"
+  }
+}
