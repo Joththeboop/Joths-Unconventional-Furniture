@@ -1,1 +1,7 @@
-{"parent": "minecraft:block/door_bottom", "textures": {"bottom": "jufurniture:block/spruce_door_bottom"}}
+{
+   "parent": "minecraft:block/door_bottom",
+    "textures": {
+      "bottom": "jufurniture:block/spruce_door_bottom",
+      "top": "jufurniture:block/spruce_door_bottom"
+  }
+}
