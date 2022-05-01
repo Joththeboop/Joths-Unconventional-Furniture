@@ -1,12 +1,16 @@
 package net.jothb.jufurniture.juf.block.blocks;
 
+import net.jothb.jufurniture.juf.Juf;
+import net.jothb.jufurniture.juf.block.ModBlocks;
 import net.jothb.jufurniture.juf.block.enums.CustomBlockHalf;
 import net.jothb.state.property.ModProperties;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.DoorHinge;
+import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -48,6 +52,8 @@ public class TripleDoor extends Block {
         setDefaultState((this.stateManager.getDefaultState().with(HALF, CustomBlockHalf.LOWER).with(FACING, Direction.NORTH).with(OPEN, false)));
     }
 
+
+
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction direction = state.get(FACING);
@@ -88,6 +94,26 @@ public class TripleDoor extends Block {
         }
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
+
+//    @Override
+//    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+//        BlockPos currentPos = pos;
+//        if (state.get(HALF) == CustomBlockHalf.UPPER) {
+//            currentPos=currentPos.down(2);
+//        } else if (state.get(HALF) == CustomBlockHalf.MIDDLE) {
+//            currentPos=currentPos.down();
+//        }
+//        CustomBlockHalf currentHalf = CustomBlockHalf.LOWER;
+//        do{
+//            if (world.getBlockState(currentPos).get(HALF) == currentHalf || world.getBlockState(currentPos).get(HALF) == currentHalf.nextUp){
+//                if (world.getBlockState(currentPos).get(HALF) == currentHalf.nextUp){currentHalf = currentHalf.nextUp;}
+//                if (world.isReceivingRedstonePower(currentPos)) {
+//                    world.setBlockState(pos, state.with(POWERED, true).with(OPEN, true), Block.NOTIFY_LISTENERS);
+//                }
+//                currentPos=currentPos.up();
+//            }
+//        }while (currentHalf != CustomBlockHalf.UPPER);
+//    }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
@@ -174,6 +200,22 @@ public class TripleDoor extends Block {
 
     private void playOpenCloseSound(World world, BlockPos pos, boolean open) {
         world.syncWorldEvent(null, open ? this.getOpenSoundEventId() : this.getCloseSoundEventId(), pos, 0);
+    }
+
+    @Override
+    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+        switch (type) {
+            case LAND: {
+                return state.get(OPEN);
+            }
+            case WATER: {
+                return false;
+            }
+            case AIR: {
+                return state.get(OPEN);
+            }
+        }
+        return false;
     }
 
     private int getCloseSoundEventId() {
